@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "1002257336789",
+    "firebase_url": "https://gymnote-63557-default-rtdb.firebaseio.com",
+    "project_id": "gymnote-63557",
+    "storage_bucket": "gymnote-63557.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1002257336789:android:243ae30c406c8d398c155c",
+        "android_client_info": {
+          "package_name": "com.example.gymnote"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkpzK925mSi9KVzBdCIsLTiUuTpIBJsvc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
