@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1002257336789:android:243ae30c406c8d398c155c",
+        "mobilesdk_app_id": "1:1002257336789:android:cbf74802d5919a7c8c155c",
         "android_client_info": {
-          "package_name": "com.example.gymnote"
+          "package_name": "com.example.app"
         }
       },
       "oauth_client": [],
