@@ -1,10 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gymnote/firebase_options.dart';
-import 'package:gymnote/module/src/firebaseAuth.dart';
-import 'package:gymnote/screens/home_screen.dart';
 import 'package:gymnote/screens/splash_screen.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 
 
 Future<void> main() async {
@@ -25,18 +22,19 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     
     return MaterialApp(
+      debugShowMaterialGrid: false,
       
       debugShowCheckedModeBanner: false,
       title: 'GymNote',
       theme: ThemeData(
        
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
+      
       ),
       initialRoute: '/',
       routes: {
-        '/' : (context) => AuthScreen(),
-        '/home' : (context) => const HomeScreen()
+        '/' : (context) => const SplashScreen(),
+       
       },
     );
   }

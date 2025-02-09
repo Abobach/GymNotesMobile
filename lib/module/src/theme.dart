@@ -14,7 +14,7 @@ final themeData = ThemeData(
     useMaterial3: true,
     textTheme: const TextTheme(
         titleMedium: TextStyle(
-            fontSize: 16,
+            fontSize: 10,
             fontWeight: FontWeight.w600,
         ),
         headlineLarge: TextStyle(
