@@ -1,8 +1,13 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gymnote/module/src/firebaseAuth.dart';
 
 
 class HomeScreen extends StatelessWidget {
-  const HomeScreen(String? email, {super.key});
+ 
+   HomeScreen();
+
+    
 
   @override
   Widget build(BuildContext context) {
@@ -14,14 +19,7 @@ class HomeScreen extends StatelessWidget {
         title: const Text('Главный экран'),
       ),
       body: const Center(
-        child: Text(
-               'GYMNOTE',
-                style: TextStyle(
-                fontFamily: 'Astronomus',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-             ),
-          ),
+        child: Text("Привет,!", style: TextStyle(fontSize: 24)),
       ),
     );
   }

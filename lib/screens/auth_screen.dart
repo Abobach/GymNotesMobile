@@ -1,5 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:gymnote/auth_bloc/auth_bloc.dart';
+import 'package:gymnote/auth_bloc/auth_event.dart';
+import 'package:gymnote/auth_bloc/auth_state.dart';
 import 'package:gymnote/module/src/firebaseAuth.dart';
 import 'package:gymnote/screens/home_screen.dart';
 
@@ -12,13 +16,11 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  //final GoogleAuthService _googleAuthService = GoogleAuthService();
-  final FirebaseAuthService _firebaseAuthService = FirebaseAuthService();
+   final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
-  String welcomeText = "Welcome!";
+  String welcomeText = "";
+  String buttonText = "пппп";
   User? currentUser;
 
   @override
@@ -35,119 +37,70 @@ class _AuthScreenState extends State<AuthScreen> {
       // Пользователь уже вошел
       setState(() {
         currentUser = user;
-        welcomeText = "Welcome, ${user.email ?? 'User'}!";
+        welcomeText = "Welcome!";
+        buttonText = "Войти";
       });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(
-          'lib/assets/image/splash.jpg',
-          fit: BoxFit.cover,
-        ),
-        Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 32.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-                'lib/assets/image/Group 2.png',
-                height: 120,
+    return Scaffold(
+      appBar: AppBar(title: const Text("Авторизация")),
+      body: BlocConsumer<AuthBloc, AuthState>(
+        listener: (context, state) {
+          if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
+        builder: (context, state) {
+          if (state is Authenticated) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Вы вошли как: ${state.userEmail}"),
+                  ElevatedButton(
+                    onPressed: () => context.read<AuthBloc>().add(AuthSignOut()),
+                    child: const Text("Выйти"),
+                  ),
+                ],
               ),
-              Text(
-                welcomeText,
-                style: const TextStyle(
-                    fontFamily: 'Astronomus',
-                    fontSize: 40,
-                    fontWeight: FontWeight.bold,
-                    color: Color.fromRGBO(102, 200, 77, 1)),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(
-                    labelText: 'Email',
-                    border: OutlineInputBorder(),
-                    focusColor: Color.fromRGBO(102, 200, 77, 1)),
-                keyboardType: TextInputType.emailAddress,
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _passwordController,
-                decoration: const InputDecoration(
-                  labelText: 'Пароль',
-                  border: OutlineInputBorder(),
-                ),
-                obscureText: true,
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: () async {
-                  final email = _emailController.text;
-                  final password = _passwordController.text;
-                  final user = await _firebaseAuthService
-                      .registerWithEmailAndPassword(email, password);
-                  if (user != null) {
-                    Navigator.push(
-                      // ignore: use_build_context_synchronously
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => HomeScreen(user.email)),
-                    );
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        backgroundColor: const Color.fromRGBO(102, 200, 77, 1),
-                        content: Text('Успешно: ${user.email}'),
-                        action: SnackBarAction(
-                          label: 'Action',
-                          onPressed: () {
-                            // Code to execute.
-                          },
-                        ),
-                      ),
-                    );
-                  } else {
-                    // ignore: use_build_context_synchronously
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(
-                        content: const Text('Ошибка'),
-                        action: SnackBarAction(
-                          label: 'Action',
-                          onPressed: () {
-                            // Code to execute.
-                          },
-                        ),
-                      ),
-                    );
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  foregroundColor: Colors.black,
-                  backgroundColor: const Color.fromRGBO(102, 200, 77, 1),
-                  minimumSize: const Size(50, 50),
-                ),
-                child: const Text('Зарегистрироваться'),
-              ),
-              const SizedBox(height: 16),
-            ],
-          ),
-        ),
-      ),
-      ],
-   
-    );
-  }
+            );
+          }
 
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    super.dispose();
+          return Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(labelText: "Email"),
+                ),
+                TextField(
+                  controller: passwordController,
+                  decoration: const InputDecoration(labelText: "Пароль"),
+                  obscureText: true,
+                ),
+                const SizedBox(height: 20),
+                if (state is AuthLoading) const CircularProgressIndicator(),
+                if (state is! AuthLoading)
+                  ElevatedButton(
+                    onPressed: () {
+                      final email = emailController.text.trim();
+                      final password = passwordController.text.trim();
+                      context.read<AuthBloc>().add(AuthSignIn(email: email, password: password));
+                    },
+                    child: const Text("Войти"),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
   }
 }

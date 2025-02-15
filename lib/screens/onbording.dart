@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gymnote/screens/auth_screen.dart';
+import 'package:gymnote/screens/settings_page.dart';
 
 class OnboardingPage1 extends StatelessWidget {
   const OnboardingPage1({super.key});
@@ -174,7 +175,7 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                            Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const AuthScreen()));
+                              builder: (context) => AuthScreen()));
                           
                         } else {
                           _pageController.animateToPage(_currentPage + 1,
